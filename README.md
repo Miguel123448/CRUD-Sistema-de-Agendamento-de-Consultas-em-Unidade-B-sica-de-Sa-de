@@ -1,12 +1,12 @@
 # CRUD Sistema de Agendamento de Consultas em Unidade Básica de Saúde
 # Participantes:
-• Miguel Pereira de Lemos (Líder técnico)
-• Breno Luiz de Lima Cruz
-• Thiago Cardozo da Conceição
-• Lucas Felipe Barreto Cavalcante
-• Pablo Arthur Eustáquio de Lima
-• Lauan Gonçalves dos Santos
-• Lucas Aprigio dos Santos
+- Miguel Pereira de Lemos (Líder técnico)
+- Breno Luiz de Lima Cruz
+- Lauan Gonçalves dos Santos
+- Lucas Aprigio dos Santos
+- Lucas Felipe Barreto Cavalcante
+- Pablo Arthur Eustáquio de Lima
+- Thiago Cardozo da Conceição
 # Funções desenvolvidas
 `carregar_dados(caminho)`
 
