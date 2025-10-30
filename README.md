@@ -7,7 +7,7 @@
 - Lucas Felipe Barreto Cavalcante
 - Pablo Arthur Eustáquio de Lima
 - Thiago Cardozo da Conceição
-Desafio escolhido: Desafio 3 Sistema de Agendamento de Consultas em Unidade Básica de Saúde
+# Desafio escolhido: Desafio 3 Sistema de Agendamento de Consultas em Unidade Básica de Saúde
 # Funções desenvolvidas
 `carregar_dados(caminho)`
 
