@@ -4,10 +4,10 @@
 Função: adiciona novos registros (linhas) em uma tabela.
 
 Sintaxe básica:
-`
+```
 INSERT INTO nome_tabela (coluna1, coluna2, coluna3)
 VALUES (valor1, valor2, valor3);
-`
+```
 
 Exemplo real:
 ``
