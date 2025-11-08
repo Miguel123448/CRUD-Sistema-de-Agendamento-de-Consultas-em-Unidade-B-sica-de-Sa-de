@@ -24,16 +24,16 @@ DROP TABLE IF EXISTS `consultas`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `consultas` (
   `consulta_id` int NOT NULL AUTO_INCREMENT,
-  `paciente_id` varchar(11) DEFAULT NULL,
+  `paciente_id` int DEFAULT NULL,
   `medico_id` int DEFAULT NULL,
   `data_hora` datetime DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
   `observacoes` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`consulta_id`),
-  KEY `paciente_id_idx` (`paciente_id`),
   KEY `medicos_id_idx` (`medico_id`),
+  KEY `pacientes_id_idx` (`paciente_id`),
   CONSTRAINT `medicos_id` FOREIGN KEY (`medico_id`) REFERENCES `medicos` (`medico_id`),
-  CONSTRAINT `paciente_id` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`cpf`)
+  CONSTRAINT `pacientes_id` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`idprontuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -55,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-06 13:29:17
+-- Dump completed on 2025-11-08 20:14:22

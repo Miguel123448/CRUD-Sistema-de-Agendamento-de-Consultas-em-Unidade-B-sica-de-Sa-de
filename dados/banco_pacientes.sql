@@ -23,18 +23,14 @@ DROP TABLE IF EXISTS `pacientes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pacientes` (
-  `cpf` varchar(11) NOT NULL,
+  `idprontuario` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(180) DEFAULT NULL,
+  `cpf` varchar(1) DEFAULT NULL,
   `nascimento` date DEFAULT NULL,
-  `telefone` varchar(15) DEFAULT NULL,
-  `logradouro` varchar(150) DEFAULT NULL,
-  `numero` varchar(10) DEFAULT NULL,
-  `complemento` varchar(100) DEFAULT NULL,
-  `bairro` varchar(100) DEFAULT NULL,
-  `cidade` varchar(100) DEFAULT NULL,
-  `estado` char(2) DEFAULT NULL,
+  `telefone` varchar(11) DEFAULT NULL,
+  `endereco` varchar(300) DEFAULT NULL,
   `cep` varchar(8) DEFAULT NULL,
-  PRIMARY KEY (`cpf`)
+  PRIMARY KEY (`idprontuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -56,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-06 13:29:17
+-- Dump completed on 2025-11-08 20:14:22
