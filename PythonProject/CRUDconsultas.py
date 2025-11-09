@@ -1,1 +1,1 @@
-consultas
+consultas = 0
