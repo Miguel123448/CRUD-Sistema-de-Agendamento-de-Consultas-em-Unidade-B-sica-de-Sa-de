@@ -1,18 +1,9 @@
-from optparse import Values
-
-import mysql.connector
-from annotated_types.test_cases import cases
-
-conexao = mysql.connector.connect(
-  host="localhost",
-  user="",
-  passwd="",
-  database="banco"
-)
+import db
 cursor = conexao.cursor()
 
 print('------ Bem vindo ao CRUD de pacientes -----')
 opcao = int(input(' 1 - Cadastrar paciente\n 2 - Ver lista de cadastros\n 3 - Atualizar cadastros \n 4 - Remover cadastros '))
+#CREATE
 if opcao == 1:
     print('----- Cadastrando paciente, porfavor preencha as informações abaixo ----- ')
     nome = input('Insira o nome do paciente: ')
@@ -26,12 +17,14 @@ if opcao == 1:
     valores = (nome, cpf, nascimento,  telefone, endereco, cep)
     cursor.execute(comando, valores)
     conexao.commit()
+#READ
 elif opcao == 2:
     print('----- Carregando lista de cadastros.... -----')
     comando = "SELECT * FROM pacientes"
     cursor.execute(comando)
     resultado = cursor.fetchall()
     print(resultado)
+#UPDATE
 elif opcao == 3:
     print('----- Atualizando cadastro -----')
 
@@ -81,6 +74,7 @@ elif opcao == 3:
     except Exception as e:
         print(f"Ocorreu um erro: {e}")
         conexao.rollback()
+#DELETE
 elif opcao == 4:
     print('----- Removendo cadastro -----')
     cpf_paciente = input('Digite o CPF do paciente que deseja remover (somente números): ')
@@ -107,4 +101,5 @@ else:
 
 
 cursor.close()
+
 conexao.close()
