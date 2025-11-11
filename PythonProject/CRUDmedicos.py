@@ -30,9 +30,6 @@ ESCOLHA UMA OPÇÃO :
         else:
             print("Opção inválida. Tente novamente.")
 
-if __name__ == "__main__":
-    menu()
-
 #  CREATE 
 def criar_medico():
     print("\n--- Cadastrar novo médico ---")
@@ -155,4 +152,7 @@ def deletar_medico(id_medico):
     cursor.close()
 
     conexao.close()
+
+if __name__ == "__main__":
+    menu()
 
