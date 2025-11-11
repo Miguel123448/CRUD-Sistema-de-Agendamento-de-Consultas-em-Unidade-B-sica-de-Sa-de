@@ -30,7 +30,6 @@ ESCOLHA UMA OPÇÃO :
         else:
             print("Opção inválida. Tente novamente.")
 
-#  CREATE 
 def criar_medico():
     print("\n--- Cadastrar novo médico ---")
     nome = input("1. Nome: ")
@@ -54,7 +53,6 @@ def criar_medico():
 
     print(f"\nMédico {nome} cadastrado com sucesso!")
 
-# READ 
 def ler_medicos():
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
@@ -82,7 +80,6 @@ Horário: {horario_inicio} - {horario_fim}
 
     return resultado
 
-# UPDATE
 def atualizar_medico():
     ler_medicos()
 
@@ -142,7 +139,6 @@ Qual dado você deseja atualizar?
     cursor.close()
     conexao.close()
 
-# DELETE
 def deletar_medico(id_medico):
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
@@ -155,4 +151,5 @@ def deletar_medico(id_medico):
 
 if __name__ == "__main__":
     menu()
+
 
