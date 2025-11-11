@@ -3,9 +3,9 @@ import db
 def menu():
     while True:
         print("""
-========================
-       MENU MÉDICOS
-========================
+      BEM VINDO DOUTOR(A) AO MENU DOS MÉDICOS!
+
+ESCOLHA UMA OPÇÃO ABAIXO:
 1. Cadastrar médico
 2. Listar médicos
 3. Atualizar médico
@@ -153,4 +153,5 @@ def deletar_medico(id_medico):
     cursor.execute(comando, (id_medico,))
     conexao.commit()
     cursor.close()
+
     conexao.close()
