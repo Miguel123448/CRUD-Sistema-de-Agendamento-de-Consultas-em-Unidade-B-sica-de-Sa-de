@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `pacientes`;
 CREATE TABLE `pacientes` (
   `idprontuario` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(180) DEFAULT NULL,
-  `cpf` varchar(1) DEFAULT NULL,
+  `cpf` varchar(11) DEFAULT NULL,
   `nascimento` date DEFAULT NULL,
   `telefone` varchar(11) DEFAULT NULL,
   `endereco` varchar(300) DEFAULT NULL,
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-08 20:14:22
+-- Dump completed on 2025-11-10 22:37:15
