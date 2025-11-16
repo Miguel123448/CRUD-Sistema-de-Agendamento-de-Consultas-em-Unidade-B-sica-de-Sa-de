@@ -8,13 +8,14 @@
 - Pablo Arthur Eustáquio de Lima
 - Thiago Cardozo da Conceição
 # Desafio escolhido: Desafio 3 Sistema de Agendamento de Consultas em Unidade Básica de Saúde
-# Funções desenvolvidas
-`carregar_dados(caminho)`
-
-caminho: Diretório do arquivo que desejamos ler.
-Retorna o carregamento do arquivo ou 0 caso não exista arquivo nesse diretório.
-
-`salvar_dados(caminho,dados)`
-
-Caminho: diretório do arquivo aonde desejamos salvar, configurado como 'w' - criar ou sobrescrever o que existir.
-Dados: o dados que vamos salvar no arquivo, sempre utilizamos dicionário.
+# Pendências
+# CRUD Consultas
+- Fazer as funções com os inputs, pra não ficar parâmetros nas funções
+- Fazer uma verificação básica das entradas, se for muito difícil não precisa fazer.
+- Antes de criar ou atualizar, verificar se há outra consulta marcada nesse mesmo horário
+# CRUD Pacientes
+- Alterar o nome das funções pra especificar o CRUD (de cadastrar pra cadastrar_paciente)
+- Não fazer as funções com parametros: iniciar e fechar o cursor e conexão na própria função.
+- Fazer uma verificação básica das entradas, se for muito difícil não precisa fazer.
+# CRUD Médicos
+- Fazer uma verificação básica das entradas, se for muito difícil não precisa fazer.
