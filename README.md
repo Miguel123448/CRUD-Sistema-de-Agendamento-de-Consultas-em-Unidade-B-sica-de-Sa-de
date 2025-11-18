@@ -22,5 +22,4 @@
 - Quando for atualizar paciente, verificar se existe alguem com o cpf digitado antes de dar as inputs
 # CRUD Médicos
 - Quando for atualizar os médicos, verificar se existe alguem com o id digitado antes de dar as inputs.
-# CRUD Médicos
 - Fazer uma verificação básica das entradas, se for muito difícil não precisa fazer.
