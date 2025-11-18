@@ -1,12 +1,12 @@
 import db
 
-def menu():
+def menu_pacientes():
     print('------ Bem vindo ao CRUD de pacientes -----')
     return int(input(
         ' 1 - Cadastrar paciente\n 2 - Ver lista de cadastros\n'
         ' 3 - Atualizar cadastros\n 4 - Remover cadastros\n 5 - Sair\nEscolha uma opção: '))
 
-def cadastrar(cursor, conexao):
+def cadastrar_paciente(cursor, conexao):
     print('----- Cadastrando paciente -----')
     nome = input('Insira o nome do paciente: ')
     cpf = input('Insira o CPF do paciente (somente números): ')
@@ -14,23 +14,37 @@ def cadastrar(cursor, conexao):
     telefone = input('Insira o telefone do paciente (somente números): ')
     endereco = input('Insira o endereço do paciente: ')
     cep = input('Insira o cep do paciente: ')
+
+    conexao = db.obter_conexao()
+    cursor = conexao.cursor()
     comando = ("INSERT INTO pacientes (nome, cpf, nascimento, telefone, endereco, cep) "
                "VALUES (%s, %s, %s, %s, %s, %s)")
     valores = (nome, cpf, nascimento, telefone, endereco, cep)
     cursor.execute(comando, valores)
     conexao.commit()
+    cursor.close()
+    conexao.close()
     print('Cadastro realizado com sucesso!')
 
-def ler(cursor):
+def ler_paceinte(cursor):
     print('----- Lista de cadastros -----')
+    conexao = db.obter_conexao()
+    cursor = conexao.cursor()
     comando = "SELECT * FROM pacientes"
     cursor.execute(comando)
     resultado = cursor.fetchall()
+    cursor.close()
+    conexao.close()
+    
     for linha in resultado:
         print(linha)
 
-def atualizar(cursor, conexao):
+def atualizar_paciente(cursor, conexao):
     print('----- Atualizando cadastro -----')
+
+    conexao = db.obter_conexao()
+    cursor = conexao.cursor()
+    
     cpf_paciente = input('Digite o CPF do paciente que deseja atualizar: ')
     print('\nQual campo deseja atualizar?')
     print(' 1 - Nome\n 2 - Data de Nascimento\n 3 - Telefone\n 4 - Endereço\n 5 - CEP')
@@ -55,9 +69,13 @@ def atualizar(cursor, conexao):
     except Exception as e:
         print(f"Ocorreu um erro: {e}")
         conexao.rollback()
+        cursor.close()
+        conexao.close()
 
-def deletar(cursor, conexao):
+def deletar_paciente(cursor, conexao):
     print('----- Removendo cadastro -----')
+    conexao = db.obter_conexao()
+    cursor = conexao.cursor()
     cpf_paciente = input('Digite o CPF do paciente que deseja remover: ')
     try:
         comando = "DELETE FROM pacientes WHERE cpf = %s"
@@ -71,6 +89,8 @@ def deletar(cursor, conexao):
     except Exception as e:
         print(f"Ocorreu um erro ao tentar remover: {e}")
         conexao.rollback()
+        cursor.close()
+        conexao.close()
 
 def main():
     conexao = db.conexao
@@ -95,3 +115,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
