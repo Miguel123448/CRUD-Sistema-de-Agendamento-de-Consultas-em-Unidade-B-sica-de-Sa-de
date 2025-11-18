@@ -26,7 +26,7 @@ CREATE TABLE `pacientes` (
   `idprontuario` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(180) DEFAULT NULL,
   `cpf` varchar(11) DEFAULT NULL,
-  `nascimento` date DEFAULT NULL,
+  `nascimento` datetime DEFAULT NULL,
   `telefone` varchar(11) DEFAULT NULL,
   `endereco` varchar(300) DEFAULT NULL,
   `cep` varchar(8) DEFAULT NULL,
@@ -53,3 +53,4 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2025-11-10 22:37:15
+
