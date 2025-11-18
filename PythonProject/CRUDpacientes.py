@@ -6,7 +6,7 @@ def menu_pacientes():
         ' 1 - Cadastrar paciente\n 2 - Ver lista de cadastros\n'
         ' 3 - Atualizar cadastros\n 4 - Remover cadastros\n 5 - Sair\nEscolha uma opção: '))
 
-def cadastrar_paciente(cursor, conexao):
+def cadastrar_paciente():
     print('----- Cadastrando paciente -----')
     nome = input('Insira o nome do paciente: ')
     cpf = input('Insira o CPF do paciente (somente números): ')
@@ -26,7 +26,7 @@ def cadastrar_paciente(cursor, conexao):
     conexao.close()
     print('Cadastro realizado com sucesso!')
 
-def ler_paceinte(cursor):
+def ler_paciente():
     print('----- Lista de cadastros -----')
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
@@ -39,7 +39,7 @@ def ler_paceinte(cursor):
     for linha in resultado:
         print(linha)
 
-def atualizar_paciente(cursor, conexao):
+def atualizar_paciente():
     print('----- Atualizando cadastro -----')
 
     conexao = db.obter_conexao()
@@ -72,10 +72,11 @@ def atualizar_paciente(cursor, conexao):
         cursor.close()
         conexao.close()
 
-def deletar_paciente(cursor, conexao):
+def deletar_paciente():
     print('----- Removendo cadastro -----')
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
+    ler_paciente()
     cpf_paciente = input('Digite o CPF do paciente que deseja remover: ')
     try:
         comando = "DELETE FROM pacientes WHERE cpf = %s"
@@ -93,25 +94,21 @@ def deletar_paciente(cursor, conexao):
         conexao.close()
 
 def main():
-    conexao = db.conexao
-    cursor = conexao.cursor()
     while True:
-        opcao = menu()
+        opcao = menu_pacientes()
         if opcao == 1:
-            cadastrar(cursor, conexao)
+            cadastrar_paciente()
         elif opcao == 2:
-            ler(cursor)
+            ler_paciente()
         elif opcao == 3:
-            atualizar(cursor, conexao)
+            atualizar_paciente()
         elif opcao == 4:
-            deletar(cursor, conexao)
+            deletar_paciente()
         elif opcao == 5:
             print('Saindo do sistema. Até logo!')
             break
         else:
             print('Opção inválida. Por favor, escolha um número de 1 a 5.')
-    cursor.close()
-    conexao.close()
 
 if __name__ == "__main__":
     main()
