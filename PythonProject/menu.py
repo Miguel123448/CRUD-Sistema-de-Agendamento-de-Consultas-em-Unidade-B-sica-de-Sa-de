@@ -1,6 +1,7 @@
 import CRUDconsultas
 import CRUDmedicos
 import CRUDpacientes
+import relatorios
 
 def menu():
     while True:
@@ -8,8 +9,9 @@ def menu():
         print('1. Gerenciar Pacientes')
         print('2. Gerenciar Médicos')
         print('3. Gerenciar Consultas')
-        print('4. Sair')
-        opcao = int(input('Escolha uma opção (1-4): '))
+        print('4. Ver Relatórios')
+        print('5. Sair')
+        opcao = int(input('Escolha uma opção (1-5): '))
         if opcao == 1:
             menu_pacientes()
         elif opcao == 2:
@@ -17,6 +19,8 @@ def menu():
         elif opcao == 3:
             menu_consultas()
         elif opcao == 4:
+            relatorios.menu_relatorio()
+        elif opcao == 5:
             print("Saindo do programa...")
             break
         else:
@@ -76,5 +80,5 @@ def menu_consultas():
         else:
             print("Opção inválida. Tente novamente.")
 
-if __name__ == "__main__":
-        menu()
+
+menu()
