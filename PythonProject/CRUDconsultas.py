@@ -57,8 +57,38 @@ def listar_consulta():
     
 #UPDATE - Atualizar uma Consulta
 def atualizar_consulta(consulta_id, novo_status, nova_data_hora):
+    if not str(consulta_id).isdigit():
+        print("\n❌ ERRO: ID da consulta inválido.")
+        return
+    consulta_id = int(consulta_id)
+
+    try:
+        datetime.strptime(nova_data_hora, "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        print("\n❌ ERRO: Data e hora no formato inválido. Use: AAAA-MM-DD HH:MM:SS")
+        return
+
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
+
+    cursor.execute("SELECT medico_id FROM consultas WHERE consulta_id = %s", (consulta_id,))
+    row = cursor.fetchone()
+    if not row:
+        print("\n❌ ERRO: Consulta não encontrada.")
+        cursor.close()
+        conexao.close()
+        return
+    medico_id = row[0]
+
+    conflito_sql = "SELECT COUNT(*) FROM consultas WHERE medico_id = %s AND data_hora = %s AND consulta_id <> %s"
+    cursor.execute(conflito_sql, (medico_id, nova_data_hora, consulta_id))
+    (contagem,) = cursor.fetchone()
+    if contagem > 0:
+        print("\n❌ ERRO: Conflito de horário — já existe outra consulta para esse médico nesse horário.")
+        cursor.close()
+        conexao.close()
+        return
+
     comando = 'UPDATE consultas SET status = %s, data_hora = %s WHERE consulta_id = %s'
     valores = (novo_status, nova_data_hora, consulta_id)
     cursor.execute(comando, valores)
