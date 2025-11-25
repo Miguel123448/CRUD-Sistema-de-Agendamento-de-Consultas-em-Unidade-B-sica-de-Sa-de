@@ -1,7 +1,13 @@
 import db
 
 #CREAT - Criar uma Nova Consulta
-def criar_consulta(paciente_id, medico_id, data_hora, status, observacoes):
+def criar_consulta():
+    paciente_id = input("ID do paciente: ")
+    medico_id = input("ID do médico: ")
+    data_hora = input("Data e hora (AAAA-MM-DD HH:MM:SS): ")
+    status = input("Status (Agendada, Concluída, Cancelada): ")
+    observacoes = input("Observações: ")
+
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
     comando = """
@@ -9,8 +15,7 @@ def criar_consulta(paciente_id, medico_id, data_hora, status, observacoes):
         VALUES (%s, %s, %s, %s, %s)
     """
     valores = (paciente_id, medico_id, data_hora, status, observacoes)
-    paciente_id = int(paciente_id)
-    medico_id = int(medico_id)
+
     cursor.execute(comando, valores)
     conexao.commit()
     cursor.close()
