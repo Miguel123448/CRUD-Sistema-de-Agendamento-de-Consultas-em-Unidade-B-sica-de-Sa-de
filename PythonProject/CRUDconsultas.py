@@ -1,15 +1,34 @@
 import db
+from datetime import datetime
 
 #CREAT - Criar uma Nova Consulta
 def criar_consulta():
+    print("\n--- Cadastro de Nova Consulta ---")
+
     paciente_id = input("ID do paciente: ")
     medico_id = input("ID do médico: ")
     data_hora = input("Data e hora (AAAA-MM-DD HH:MM:SS): ")
     status = input("Status (Agendada, Concluída, Cancelada): ")
     observacoes = input("Observações: ")
 
+    if not paciente_id.isdigit() or not medico_id.isdigit():
+        print("\n❌ ERRO: O ID do paciente e o ID do médico devem ser números.\n")
+        return
+
+    try:
+        datetime.strptime(data_hora, "%Y-%m-%d %H:%M:%S")
+    except ValueError:
+        print("\n❌ ERRO: Data e hora no formato inválido.\nUse: AAAA-MM-DD HH:MM:SS\n")
+        return
+
+    status_valido = ["Agendada", "Concluída", "Cancelada"]
+    if status not in status_valido:
+        print("\n❌ ERRO: Status inválido. Use: Agendada, Concluída ou Cancelada.\n")
+        return
+
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
+
     comando = """
         INSERT INTO consultas (paciente_id, medico_id, data_hora, status, observacoes)
         VALUES (%s, %s, %s, %s, %s)
@@ -20,7 +39,9 @@ def criar_consulta():
     conexao.commit()
     cursor.close()
     conexao.close()
+
     print("\n--- Consulta cadastrada com sucesso!! ---")
+
 
 #READ - Ler/Listar as consultas
 def listar_consulta():
@@ -71,12 +92,7 @@ while True:
 
     match opcao:
         case "1":
-            paciente_id = input("ID do paciente: ")
-            medico_id = input("ID do médico: ")
-            data_hora = input("Data e hora (AAAA-MM-DD HH:MM:SS): ")
-            status = input("Status (Agendada, Concluída, Cancelada): ")
-            observacoes = input("Observações: ")
-            criar_consulta(paciente_id, medico_id, data_hora, status, observacoes)
+            criar_consulta()
 
         case "2":
             listar_consulta()
