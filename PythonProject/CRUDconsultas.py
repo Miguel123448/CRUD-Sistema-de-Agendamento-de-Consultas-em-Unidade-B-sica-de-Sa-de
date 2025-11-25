@@ -105,13 +105,29 @@ def atualizar_consulta():
         print("\n❌ ERRO: Data e hora no formato inválido. Use: AAAA-MM-DD HH:MM:SS\n")
         return
 
-    # Verifica conflito de horário
-    if verificar_conflito_horario(consulta_id, nova_data_hora):
-        print("\n❌ ERRO: Já existe uma consulta marcada para este médico nesse horário.\n")
-        return
-
+    # --- Verificação de conflito de horário ---
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
+
+    # Busca o médico da consulta que será atualizada
+    cursor.execute("SELECT medico_id FROM consultas WHERE consulta_id = %s", (consulta_id,))
+    resultado = cursor.fetchone()
+    if not resultado:
+        print("\n❌ ERRO: Consulta não encontrada.\n")
+        cursor.close()
+        conexao.close()
+        return
+
+    medico_id = resultado[0]
+
+    # Checa se há conflito com outra consulta
+    if verificar_conflito_horario(medico_id, nova_data_hora, consulta_id_existente=consulta_id):
+        print("\n❌ ERRO: Já existe uma consulta marcada para este médico nesse horário.\n")
+        cursor.close()
+        conexao.close()
+        return
+
+    # Atualiza consulta
     comando = 'UPDATE consultas SET status = %s, data_hora = %s WHERE consulta_id = %s'
     valores = (novo_status, nova_data_hora, consulta_id)
     cursor.execute(comando, valores)
