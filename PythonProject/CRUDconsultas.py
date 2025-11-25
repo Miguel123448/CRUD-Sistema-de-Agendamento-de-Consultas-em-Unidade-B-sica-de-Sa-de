@@ -1,18 +1,29 @@
 import db
 from datetime import datetime
 
-def verificar_conflito_horario(medico_id, data_hora):
+def verificar_conflito_horario(medico_id, data_hora, consulta_id_existente=None):
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
 
-    comando = "SELECT COUNT(*) FROM consultas WHERE medico_id = %s AND data_hora = %s"
-    cursor.execute(comando, (medico_id, data_hora))
-    resultado = cursor.fetchone()
+    if consulta_id_existente:
+        comando = """
+            SELECT COUNT(*) FROM consultas
+            WHERE medico_id = %s AND data_hora = %s AND consulta_id != %s
+        """
+        valores = (medico_id, data_hora, consulta_id_existente)
+    else:
+        comando = """
+            SELECT COUNT(*) FROM consultas
+            WHERE medico_id = %s AND data_hora = %s
+        """
+        valores = (medico_id, data_hora)
 
+    cursor.execute(comando, valores)
+    resultado = cursor.fetchone()[0]
     cursor.close()
     conexao.close()
 
-    return resultado[0] > 0
+    return resultado > 0  # True se houver conflito
 
 #CREAT - Criar uma Nova Consulta
 def criar_consulta():
