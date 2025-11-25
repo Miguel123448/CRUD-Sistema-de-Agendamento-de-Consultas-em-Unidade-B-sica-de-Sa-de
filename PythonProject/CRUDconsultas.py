@@ -111,7 +111,14 @@ def atualizar_consulta():
     print("\n--- Consulta atualizada com sucesso!! ---")
 
 #DELETE - Excluir uma consulta
-def deletar_consulta(consulta_id):
+def deletar_consulta():
+    print("\n--- Excluir Consulta ---")
+    consulta_id = input("ID da consulta que deseja excluir: ")
+
+    if not consulta_id.isdigit():
+        print("\n❌ ERRO: O ID da consulta deve ser um número.\n")
+        return
+
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
     comando = 'DELETE FROM consultas WHERE consulta_id = %s'
@@ -120,6 +127,7 @@ def deletar_consulta(consulta_id):
     conexao.commit()
     cursor.close()
     conexao.close()
+
     print("\n--- Consulta excluída com sucesso!! ---")
 
 #Menu para teste do CRUD
@@ -144,8 +152,7 @@ while True:
             atualizar_consulta()
 
         case "4":
-            consulta_id = input("ID da consulta que deseja excluir: ")
-            deletar_consulta(consulta_id)
+           deletar_consulta()
 
         case "5":
             print("Encerrando o sistema...")
