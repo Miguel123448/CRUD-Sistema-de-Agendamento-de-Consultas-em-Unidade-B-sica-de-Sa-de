@@ -1,29 +1,53 @@
 import db
 from datetime import datetime
 
+def verificar_conflito_horario(medico_id, data_hora):
+    conexao = db.obter_conexao()
+    cursor = conexao.cursor()
+
+    comando = """
+        SELECT COUNT(*)
+        FROM consultas
+        WHERE medico_id = %s
+        AND data_hora = %s
+    """
+
+    valores = (medico_id, data_hora)
+    cursor.execute(comando, valores)
+    resultado = cursor.fetchone()
+
+    cursor.close()
+    conexao.close()
+
+    return resultado[0] > 0
+
 #CREAT - Criar uma Nova Consulta
 def criar_consulta():
-    print("\n--- Cadastro de Nova Consulta ---")
-
     paciente_id = input("ID do paciente: ")
     medico_id = input("ID do médico: ")
     data_hora = input("Data e hora (AAAA-MM-DD HH:MM:SS): ")
     status = input("Status (Agendada, Concluída, Cancelada): ")
     observacoes = input("Observações: ")
 
-    if not paciente_id.isdigit() or not medico_id.isdigit():
-        print("\n❌ ERRO: O ID do paciente e o ID do médico devem ser números.\n")
+    if not paciente_id.isdigit():
+        print("❌ O ID do paciente deve ser um número.")
         return
 
-    try:
-        datetime.strptime(data_hora, "%Y-%m-%d %H:%M:%S")
-    except ValueError:
-        print("\n❌ ERRO: Data e hora no formato inválido.\nUse: AAAA-MM-DD HH:MM:SS\n")
+    if not medico_id.isdigit():
+        print("❌ O ID do médico deve ser um número.")
         return
 
-    status_valido = ["Agendada", "Concluída", "Cancelada"]
-    if status not in status_valido:
-        print("\n❌ ERRO: Status inválido. Use: Agendada, Concluída ou Cancelada.\n")
+    if data_hora.strip() == "":
+        print("❌ A data e hora não podem estar vazias.")
+        return
+
+    status_permitidos = ["Agendada", "Concluída", "Cancelada"]
+    if status not in status_permitidos:
+        print("❌ Status inválido. Escolha entre: Agendada, Concluída ou Cancelada.")
+        return
+
+    if verificar_conflito_horario(medico_id, data_hora):
+        print("❌ Já existe uma consulta marcada para esse médico nesse horário.")
         return
 
     conexao = db.obter_conexao()
@@ -31,16 +55,15 @@ def criar_consulta():
 
     comando = """
         INSERT INTO consultas (paciente_id, medico_id, data_hora, status, observacoes)
-        VALUES (%s, %s, %s, %s, %s)
+        VALUES (?, ?, ?, ?, ?)
     """
-    valores = (paciente_id, medico_id, data_hora, status, observacoes)
 
+    valores = (paciente_id, medico_id, data_hora, status, observacoes)
     cursor.execute(comando, valores)
     conexao.commit()
-    cursor.close()
     conexao.close()
 
-    print("\n--- Consulta cadastrada com sucesso!! ---")
+    print("Consulta criada com sucesso!")
 
 
 #READ - Ler/Listar as consultas
