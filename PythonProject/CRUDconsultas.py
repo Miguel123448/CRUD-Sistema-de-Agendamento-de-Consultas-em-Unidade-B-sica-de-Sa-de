@@ -5,15 +5,8 @@ def verificar_conflito_horario(medico_id, data_hora):
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
 
-    comando = """
-        SELECT COUNT(*)
-        FROM consultas
-        WHERE medico_id = %s
-        AND data_hora = %s
-    """
-
-    valores = (medico_id, data_hora)
-    cursor.execute(comando, valores)
+    comando = "SELECT COUNT(*) FROM consultas WHERE medico_id = %s AND data_hora = %s"
+    cursor.execute(comando, (medico_id, data_hora))
     resultado = cursor.fetchone()
 
     cursor.close()
