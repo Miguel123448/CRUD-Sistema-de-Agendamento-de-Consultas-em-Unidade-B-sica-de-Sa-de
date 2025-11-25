@@ -79,41 +79,28 @@ def atualizar_consulta():
     novo_status = input("Novo status (Agendada, Concluída, Cancelada): ")
     nova_data_hora = input("Nova data e hora (AAAA-MM-DD HH:MM:SS): ")
 
-    # Validações
     if not consulta_id.isdigit():
-        print("\n❌ ERRO: ID da consulta deve ser um número.")
+        print("\n❌ ERRO: O ID da consulta deve ser um número.\n")
         return
 
     status_valido = ["Agendada", "Concluída", "Cancelada"]
     if novo_status not in status_valido:
-        print("\n❌ ERRO: Status inválido. Use: Agendada, Concluída ou Cancelada.")
+        print("\n❌ ERRO: Status inválido. Use: Agendada, Concluída ou Cancelada.\n")
         return
 
-    from datetime import datetime
     try:
         datetime.strptime(nova_data_hora, "%Y-%m-%d %H:%M:%S")
     except ValueError:
-        print("\n❌ ERRO: Data e hora no formato inválido. Use AAAA-MM-DD HH:MM:SS")
+        print("\n❌ ERRO: Data e hora no formato inválido. Use: AAAA-MM-DD HH:MM:SS\n")
+        return
+
+    # Verifica conflito de horário
+    if verificar_conflito_horario(consulta_id, nova_data_hora):
+        print("\n❌ ERRO: Já existe uma consulta marcada para este médico nesse horário.\n")
         return
 
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
-
-    # Buscar médico vinculado à consulta
-    cursor.execute("SELECT medico_id FROM consultas WHERE consulta_id = %s", (consulta_id,))
-    resultado = cursor.fetchone()
-
-    if not resultado:
-        print("\n❌ ERRO: Consulta não encontrada.")
-        return
-
-    medico_id = resultado[0]
-
-    # Verificar conflito de horário
-    if verificar_conflito_horario(medico_id, nova_data_hora):
-        print("\n❌ ERRO: Já existe uma consulta marcada para esse médico nesse horário.")
-        return
-
     comando = 'UPDATE consultas SET status = %s, data_hora = %s WHERE consulta_id = %s'
     valores = (novo_status, nova_data_hora, consulta_id)
     cursor.execute(comando, valores)
