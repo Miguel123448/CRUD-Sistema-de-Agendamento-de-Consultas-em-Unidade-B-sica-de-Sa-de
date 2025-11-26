@@ -158,32 +158,36 @@ def deletar_consulta():
     print("\n--- Consulta excluída com sucesso!! ---")
 
 #Menu para teste do CRUD
-while True:
-    print("\n--- Sistema de Consultas UBS ---")
-    print("1. Cadastrar nova consulta")
-    print("2. Listar consultas")
-    print("3. Atualizar consulta")
-    print("4. Excluir consulta")
-    print("5. Sair")
+def menu():
+    while True:
+        print("\n--- Sistema de Consultas UBS ---")
+        print("1. Cadastrar nova consulta")
+        print("2. Listar consultas")
+        print("3. Atualizar consulta")
+        print("4. Excluir consulta")
+        print("5. Sair")
 
-    opcao = input("\nEscolha uma opção: ")
+        opcao = input("\nEscolha uma opção: ")
 
-    match opcao:
-        case "1":
-            criar_consulta()
+        match opcao:
+            case "1":
+                criar_consulta()
 
-        case "2":
-            listar_consulta()
+            case "2":
+                listar_consulta()
 
-        case "3":
-            atualizar_consulta()
+            case "3":
+                atualizar_consulta()
 
-        case "4":
-           deletar_consulta()
+            case "4":
+                deletar_consulta()
 
-        case "5":
-            print("Encerrando o sistema...")
-            break
+            case "5":
+                print("Encerrando o sistema...")
+                break
 
-        case _:
-            print(" \n--- Opção inválida! Tente novamente! ---")
+            case _:
+                print(" \n--- Opção inválida! Tente novamente! ---")
+
+if __name__ == "__main__":
+    menu()
