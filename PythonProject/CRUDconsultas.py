@@ -4,70 +4,110 @@ from datetime import datetime
 def verificar_conflito_horario(medico_id, data_hora, consulta_id_existente=None):
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
-
-    if consulta_id_existente:
-        comando = """
+    try:
+        if consulta_id_existente:
+            comando = """
             SELECT COUNT(*) FROM consultas
-            WHERE medico_id = %s AND data_hora = %s AND consulta_id != %s
+            WHERE medico_id = %s 
+            AND data_hora = %s 
+            AND consulta_id != %s
+            AND status != 'CANCELADA' 
         """
-        valores = (medico_id, data_hora, consulta_id_existente)
-    else:
-        comando = """
+            valores = (medico_id, data_hora, consulta_id_existente)
+        else:
+            comando = """
             SELECT COUNT(*) FROM consultas
-            WHERE medico_id = %s AND data_hora = %s
+            WHERE medico_id = %s 
+            AND data_hora = %s
+            AND status != 'CANCELADA' 
         """
-        valores = (medico_id, data_hora)
+            valores = (medico_id, data_hora)           
+        cursor.execute(comando,valores)
+        resultado = cursor.fetchone()[0]
+        return resultado > 0
+    
+    except Exception as e:
+        print(f"Erro na verificação: {e}")
+        return True
 
-    cursor.execute(comando, valores)
-    resultado = cursor.fetchone()[0]
-    cursor.close()
-    conexao.close()
-
-    return resultado > 0  # True se houver conflito
+    finally:
+        cursor.close()
+        conexao.close()
 
 #CREAT - Criar uma Nova Consulta
 def criar_consulta():
-    paciente_id = input("ID do paciente: ")
-    medico_id = input("ID do médico: ")
-    data_hora = input("Data e hora (AAAA-MM-DD HH:MM:SS): ")
-    status = input("Status (Agendada, Concluída, Cancelada): ")
-    observacoes = input("Observações: ")
-
-    if not paciente_id.isdigit():
-        print("❌ O ID do paciente deve ser um número.")
-        return
-
-    if not medico_id.isdigit():
-        print("❌ O ID do médico deve ser um número.")
-        return
-
-    if data_hora.strip() == "":
-        print("❌ A data e hora não podem estar vazias.")
-        return
-
-    status_permitidos = ["Agendada", "Concluída", "Cancelada"]
-    if status not in status_permitidos:
-        print("❌ Status inválido. Escolha entre: Agendada, Concluída ou Cancelada.")
-        return
-
-    if verificar_conflito_horario(medico_id, data_hora):
-        print("❌ Já existe uma consulta marcada para esse médico nesse horário.")
-        return
+    print("--- Nova Consulta ---")
 
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
 
-    comando = """
-        INSERT INTO consultas (paciente_id, medico_id, data_hora, status, observacoes)
-        VALUES (?, ?, ?, ?, ?)
-    """
+    while True:
+        paciente_id = input("ID do paciente: ").strip()
 
-    valores = (paciente_id, medico_id, data_hora, status, observacoes)
-    cursor.execute(comando, valores)
-    conexao.commit()
-    conexao.close()
+        if not paciente_id.isdigit():
+            print("❌ ERRO: O ID do paciente deve ser um número.")
+            continue
 
-    print("Consulta criada com sucesso!")
+        cursor.execute("SELECT COUNT(*) FROM pacientes WHERE idprontuario = %s", (paciente_id,))
+        if cursor.fetchone()[0] == 0:
+            print(f"❌ Erro: Paciente com ID {paciente_id} não encontrado.")
+            continue
+
+        break
+
+    while True:
+        medico_id = input("ID do médico: ").strip()
+
+        if not medico_id.isdigit():
+            print("❌ O ID do médico deve ser um número.")
+            continue
+
+        cursor.execute("SELECT COUNT(*) FROM medicos WHERE medico_id = %s", (medico_id,))
+        if cursor.fetchone()[0] == 0:
+            print(f"❌ Erro: Médico com ID {medico_id} não encontrado.")
+            continue
+        
+        break
+    
+    while True:
+        print("\n--- Agendamento ---")
+        data_consulta = input("Data (AAA-MM-DD): ").strip()
+        hora_consulta = input("Hora (HH:MM): ").strip()
+        
+        data_hora_final = f"{data_consulta} {hora_consulta}:00"
+        try:
+            datetime.strptime(data_hora_final, '%Y-%m-%d %H:%M:%S')
+        except ValueError:
+            print("❌ Data ou Hora inválidas! Verifique se usou o formato correto.")
+            print("Exemplo Data: 2024-12-25 | Exemplo Hora: 14:30")
+            continue
+        if verificar_conflito_horario(medico_id, data_hora_final):
+            print("❌ Médico indisponível neste horário. Escolha outro.")
+            continue
+            
+        break
+
+    observacoes = input("Observações: ")
+    status = "AGENDADO"
+    
+    try:
+        comando = """
+            INSERT INTO consultas (paciente_id, medico_id, data_hora, status, observacoes) 
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        valores = (paciente_id, medico_id, data_hora_final, status, observacoes)
+
+        cursor.execute(comando, valores)
+        conexao.commit()
+        
+    except Exception as e:
+        print(f"❌ Erro ao salvar: {e}")
+        
+    finally:
+        cursor.close()
+        conexao.close()
+
+    print("\n✅ Consulta agendada com sucesso!")
 
 
 #READ - Ler/Listar as consultas
@@ -158,36 +198,32 @@ def deletar_consulta():
     print("\n--- Consulta excluída com sucesso!! ---")
 
 #Menu para teste do CRUD
-def menu():
-    while True:
-        print("\n--- Sistema de Consultas UBS ---")
-        print("1. Cadastrar nova consulta")
-        print("2. Listar consultas")
-        print("3. Atualizar consulta")
-        print("4. Excluir consulta")
-        print("5. Sair")
+while True:
+    print("\n--- Sistema de Consultas UBS ---")
+    print("1. Cadastrar nova consulta")
+    print("2. Listar consultas")
+    print("3. Atualizar consulta")
+    print("4. Excluir consulta")
+    print("5. Sair")
 
-        opcao = input("\nEscolha uma opção: ")
+    opcao = input("\nEscolha uma opção: ")
 
-        match opcao:
-            case "1":
-                criar_consulta()
+    match opcao:
+        case "1":
+            criar_consulta()
 
-            case "2":
-                listar_consulta()
+        case "2":
+            listar_consulta()
 
-            case "3":
-                atualizar_consulta()
+        case "3":
+            atualizar_consulta()
 
-            case "4":
-                deletar_consulta()
+        case "4":
+           deletar_consulta()
 
-            case "5":
-                print("Encerrando o sistema...")
-                break
+        case "5":
+            print("Encerrando o sistema...")
+            break
 
-            case _:
-                print(" \n--- Opção inválida! Tente novamente! ---")
-
-if __name__ == "__main__":
-    menu()
+        case _:
+            print(" \n--- Opção inválida! Tente novamente! ---")
