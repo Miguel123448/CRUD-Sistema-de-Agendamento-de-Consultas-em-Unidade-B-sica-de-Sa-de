@@ -29,7 +29,7 @@ def menu():
 def menu_pacientes():
     while True:
         print("------ Bem vindo ao CRUD de pacientes -----")
-        print(" 1 - Cadastrar paciente\n 2 - Ver lista de cadastros\n 3 - Atualizar cadastros\n 4 - Remover cadastros\n 5 - Voltar ao menu principal")
+        print(" 1 - Cadastrar paciente\n 2 - Ver lista de pacientes\n 3 - Atualizar cadastro de paciente\n 4 - Remover cadastro de paciente\n 5 - Voltar ao menu principal")
         opcao = int(input("Escolha uma opção: "))
         if opcao == 1:
             CRUDpacientes.cadastrar_paciente()
@@ -47,7 +47,7 @@ def menu_pacientes():
 def menu_medicos():
     while True:
         print("------ Bem vindo ao CRUD de médicos -----")
-        print(" 1 - Cadastrar médico\n 2 - Ver lista de cadastros\n 3 - Atualizar cadastros\n 4 - Remover cadastros\n 5 - Voltar ao menu principal")
+        print(" 1 - Cadastrar médico\n 2 - Ver lista de médicos\n 3 - Atualizar cadastro de médico\n 4 - Remover cadastro de médico\n 5 - Voltar ao menu principal")
         opcao = int(input("Escolha uma opção: "))
         if opcao == 1:
             CRUDmedicos.criar_medico()
@@ -65,7 +65,7 @@ def menu_medicos():
 def menu_consultas():
     while True:
         print("------ Bem vindo ao CRUD de consultas -----")
-        print(" 1 - Cadastrar consulta\n 2 - Ver lista de cadastros\n 3 - Atualizar cadastros\n 4 - Remover cadastros\n 5 - Voltar ao menu principal")
+        print(" 1 - Cadastrar consulta\n 2 - Ver lista de consultas\n 3 - Atualizar consulta\n 4 - Remover consulta\n 5 - Voltar ao menu principal")
         opcao = int(input("Escolha uma opção: "))
         if opcao == 1:
             CRUDconsultas.criar_consulta()
