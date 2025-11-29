@@ -18,3 +18,4 @@
 - Validação de CRM com no mínimo 4 números (PE1234) ou (1234PE), oq achar melhor e sem máximo.
 - Validação do horário no formato (HH:MM) e com válidação do regex de horário válidos.
 - Usar try except e finally pra tratar erros
+- A função deletar_medicos() está usando um parametro, colocar tudo dentro da função.
