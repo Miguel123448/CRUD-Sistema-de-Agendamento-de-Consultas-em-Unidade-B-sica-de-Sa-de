@@ -19,3 +19,8 @@
 - Validação do horário no formato (HH:MM) e com válidação do regex de horário válidos.
 - Usar try except e finally pra tratar erros
 - A função deletar_medicos() está usando um parametro, colocar tudo dentro da função.
+## CRUD Pacientes
+- Função ler_pacientes e atualizar_paciente falta implementação de try, except e finally na conexão do cursor.
+- Função cpf_existe falta a implementação de try, except e finally (não necessariamente precisa se essa função for chamada em um local que já tenha sido aberto a conexao)
+## Relatorios
+- Implementação de try, except e finally.
