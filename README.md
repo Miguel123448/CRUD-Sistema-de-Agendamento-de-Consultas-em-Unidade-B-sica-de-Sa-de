@@ -21,5 +21,5 @@
 - Quando fazer a visualização, precisa tratar os dados para exibir corretamente.
 - Quando for atualizar paciente, verificar se existe alguem com o cpf digitado antes de dar as inputs
 # CRUD Médicos
-- Quando for atualizar os médicos, verificar se existe alguem com o id digitado antes de dar as inputs.
-- Fazer uma verificação básica das entradas, se for muito difícil não precisa fazer.
+- Validação de CRM com no mínimo 4 números (PE1234) ou (1234PE), oq achar melhor e sem máximo.
+- Validação do horário no formato (HH:MM) e com válidação do regex de horário válidos.
