@@ -124,4 +124,5 @@ def menu_relatorio():
         else:
             print("Opção inválida. Tente novamente.")
 
-menu_relatorio()
+if __name__ == "__main__":
+    menu_relatorio()
