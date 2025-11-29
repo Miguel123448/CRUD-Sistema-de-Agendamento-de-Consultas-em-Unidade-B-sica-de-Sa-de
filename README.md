@@ -13,13 +13,6 @@
 - Fazer as funções com os inputs, pra não ficar parâmetros nas funções
 - Fazer uma verificação básica das entradas, se for muito difícil não precisa fazer.
 - Antes de criar ou atualizar, verificar se há outra consulta marcada nesse mesmo horário
-# CRUD Pacientes
-- Alterar o nome das funções pra especificar o CRUD (de cadastrar pra cadastrar_paciente)
-- Não fazer as funções com parametros: iniciar e fechar o cursor e conexão na própria função.
-- Fazer uma verificação básica das entradas, se for muito difícil não precisa fazer.
-- A data de nascimento está na ordem dos EUA. Precisa pegar as datas separadamente e concatenar.
-- Quando fazer a visualização, precisa tratar os dados para exibir corretamente.
-- Quando for atualizar paciente, verificar se existe alguem com o cpf digitado antes de dar as inputs
 # CRUD Médicos
 - Validação de CRM com no mínimo 4 números (PE1234) ou (1234PE), oq achar melhor e sem máximo.
 - Validação do horário no formato (HH:MM) e com válidação do regex de horário válidos.
