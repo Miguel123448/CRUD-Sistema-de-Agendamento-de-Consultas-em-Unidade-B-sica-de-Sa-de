@@ -1,6 +1,5 @@
 import db
 
-
 def relatorioMedicos():
     conexao = db.obter_conexao()
     cursor = conexao.cursor()
@@ -13,29 +12,37 @@ def relatorioMedicos():
     for medico in medicos:
         print(f"{medico[0]} - {medico[1]}") 
     
-    nomeMedico = input("\nEscreva o nome do médico que você quer gerar o relátorio:")
-    print(f"\nSeu medico selecionado é {nomeMedico}")
+    medico_id = input("\nDigite o ID do médico que deseja gerar o relatório: ")
+
+    cursor.execute("SELECT nome FROM medicos WHERE medico_id = %s", (medico_id,))
+    resultado = cursor.fetchone()
+
+    if not resultado:
+        print("\nNenhum médico encontrado com esse ID.")
+        return
     
-    cursor.execute("SELECT medico_id FROM medicos WHERE nome = %s", (nomeMedico,))
-    resultado = cursor.fetchall()
+    nomeMedico = resultado[0]
+    print(f"\nMédico selecionado: {nomeMedico}")
     
-    medicoSelecionado = resultado[0][0]
-    cursor.execute("SELECT * FROM consultas WHERE medico_id = %s", (medicoSelecionado,))
+    cursor.execute("SELECT * FROM consultas WHERE medico_id = %s", (medico_id,))
     relatorio = cursor.fetchall()
+
+    if not relatorio:
+        print("\nNenhuma consulta encontrada para esse médico.")
+        return
+
     print("\nConsultas do médico selecionado:")
     for consulta in relatorio:
-     print(f"ID da consulta: {consulta[0]}")
-     print(f"ID do paciente: {consulta[1]}")
-     print(f"ID do médico: {consulta[2]}")
-     print(f"Data e hora: {consulta[3]}")
-     print(f"Status: {consulta[4]}")
-     print(f"Observações: {consulta[5]}")
-     print("---------------------------------------")
+        print(f"ID da consulta: {consulta[0]}")
+        print(f"ID do paciente: {consulta[1]}")
+        print(f"ID do médico: {consulta[2]}")
+        print(f"Data e hora: {consulta[3]}")
+        print(f"Status: {consulta[4]}")
+        print(f"Observações: {consulta[5]}")
+        print("---------------------------------------")
 
     cursor.close()
     conexao.close()
-
-
 
 
 def relatorioData():
@@ -47,17 +54,18 @@ def relatorioData():
     
     print("\nAs datas disponíveis para relatório são:")
     for data in datasDisponiveis:
-     print(data[0])
+        print(data[0])
      
     dataSelecionada = input("\nDe qual data você deseja gerar um relatório\n")
+
     cursor.execute("SELECT * FROM consultas WHERE DATE(data_hora) = %s", (dataSelecionada,))
     resultado = cursor.fetchall()
+
     if not resultado:
         print("\nNenhuma consulta encontrada nessa data.")
         return
     
     for consulta in resultado:
-        
         consulta_id = consulta[0]
         paciente_id = consulta[1]
         medico_id = consulta[2]
@@ -75,11 +83,11 @@ def relatorioData():
         print(f"Observação: {observacoes}")
         
     print("\n----- FIM DO RELATÓRIO -----")
+
     cursor.close()
     conexao.close()
-    
-       
-#UPDATE - Atualizar uma Consulta
+
+
 def menu_relatorio():
     while True:
         print('----- Tipo -----')
@@ -100,6 +108,4 @@ def menu_relatorio():
         else:
             print("Opção inválida. Tente novamente.")
 
-    
-if __name__ == "__main__":
-    menu_relatorio()
+menu_relatorio()
