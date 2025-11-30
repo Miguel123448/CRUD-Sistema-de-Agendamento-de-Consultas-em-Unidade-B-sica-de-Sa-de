@@ -2,7 +2,7 @@
 import db
 from datetime import datetime
 
-STATUS_VALIDOS = ["AGENDADO", "AGENDADA", "CONCLUIDA", "CONCLUÍDA", "CANCELADA"]
+STATUS_VALIDOS = ["AGENDADO", "AGENDADA", "CONCLUIDA", "CONCLUÍDA", "CANCELADA", "FALTA"]
 
 def verificar_conflito_horario(medico_id, data_hora, consulta_id_existente=None):
     try:
@@ -30,23 +30,18 @@ def verificar_conflito_horario(medico_id, data_hora, consulta_id_existente=None)
             cursor.execute(comando, valores)
             resultado = cursor.fetchone()
             if resultado is None:
-                return True  # tratamos como conflito/erro para segurança
+                return True 
             return resultado[0] > 0
         finally:
             cursor.close()
             conexao.close()
     except Exception as e:
         print(f"Erro na verificação de conflito: {e}")
-        return True  # em caso de erro, considerar como conflito para evitar marcação inválida
-
-
-
-# CREATE
+        return True
 
 def criar_consulta():
     print("--- Nova Consulta ---")
 
-    # Tenta abrir conexão e cursor - se falhar, retorna
     try:
         conexao = db.obter_conexao()
         cursor = conexao.cursor()
@@ -55,7 +50,6 @@ def criar_consulta():
         return
 
     try:
-        # valida paciente
         while True:
             paciente_id = input("ID do paciente: ").strip()
             if not paciente_id.isdigit():
@@ -70,7 +64,6 @@ def criar_consulta():
 
             break
 
-        # valida medico
         while True:
             medico_id = input("ID do médico: ").strip()
             if not medico_id.isdigit():
@@ -85,22 +78,30 @@ def criar_consulta():
 
             break
 
-        # data/hora e conflito
         while True:
             print("\n--- Agendamento ---")
-            data_consulta = input("Data (AAAA-MM-DD): ").strip()
-            hora_consulta = input("Hora (HH:MM): ").strip()
+            print("Informe a data da consulta:")
+            
+            dia = input("Dia (Ex: 05): ").strip()
+            mes = input("Mês (Ex: 12): ").strip()
+            ano = input("Ano (Ex: 2025): ").strip()
+            
+            print("Informe o horário:")
+            hora = input("Hora (HH:MM): ").strip()
 
-            data_hora_final = f"{data_consulta} {hora_consulta}:00"
             try:
-                # valida formato
+                data_hora_final = f"{ano}-{mes.zfill(2)}-{dia.zfill(2)} {hora}:00"
+                
                 datetime.strptime(data_hora_final, '%Y-%m-%d %H:%M:%S')
+                
+                if datetime.strptime(data_hora_final, '%Y-%m-%d %H:%M:%S') < datetime.now():
+                    print("❌ Você não pode agendar uma consulta no passado!")
+                    continue
+
             except ValueError:
-                print("❌ Data ou Hora inválidas! Verifique se usou o formato correto.")
-                print("Exemplo Data: 2024-12-25 | Exemplo Hora: 14:30")
+                print("❌ Data inválida! Verifique se o dia existe no mês (ex: 30 de Fevereiro) ou o formato da hora.")
                 continue
 
-            # verifica conflito
             if verificar_conflito_horario(medico_id, data_hora_final):
                 print("❌ Médico indisponível neste horário. Escolha outro.")
                 continue
@@ -133,104 +134,176 @@ def criar_consulta():
         except:
             pass
 
-
-
-# READ
-
 def listar_consulta():
+    print("\n--- Listagem de Consultas ---")
+
     try:
         conexao = db.obter_conexao()
+        if conexao is None: return
         cursor = conexao.cursor()
-    except Exception as e:
-        print(f"❌ Erro ao conectar no banco: {e}")
-        return
 
-    try:
-        cursor.execute("SELECT * FROM consultas")
-        resultado = cursor.fetchall()
-        print("\n Consultas cadastradas:")
-        for consulta in resultado:
-            print(consulta)
+        sql = """
+            SELECT c.consulta_id, c.data_hora, p.nome, m.nome, c.status
+            FROM consultas c
+            JOIN pacientes p ON c.paciente_id = p.idprontuario
+            JOIN medicos m ON c.medico_id = m.medico_id
+            ORDER BY c.data_hora
+        """
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+
+        if not resultados:
+            print("📭 Nenhuma consulta agendada.")
+            return
+
+        print("-" * 85)
+        print(f"{'ID':<4} | {'DATA/HORA':<18} | {'PACIENTE':<20} | {'MÉDICO':<15} | {'STATUS'}")
+        print("-" * 85)
+
+        for linha in resultados:
+            id_con = linha[0]
+            data = linha[1].strftime('%d/%m/%Y %H:%M')
+            paciente = linha[2]
+            medico = linha[3]
+            status = linha[4]
+
+            print(f"{id_con:<4} | {data:<18} | {paciente[:19]:<20} | {medico[:14]:<15} | {status}")
+        
+        print("-" * 85)
+
     except Exception as e:
-        print(f"❌ Erro ao listar consultas: {e}")
+        print(f"❌ Erro ao listar: {e}")
     finally:
-        cursor.close()
-        conexao.close()
-
-
-
-# UPDATE
+        try:
+            cursor.close()
+            conexao.close()
+        except:
+            pass
 
 def atualizar_consulta():
     print("\n--- Atualizar Consulta ---")
 
-    # conecta
     try:
         conexao = db.obter_conexao()
+        if conexao is None:
+            return
         cursor = conexao.cursor()
     except Exception as e:
         print(f"❌ ERRO ao conectar no banco: {e}")
         return
 
     try:
-        # pede e valida consulta_id e obtém medico_id atual
-        consulta_id = input("ID da consulta que deseja atualizar: ").strip()
-        if not consulta_id.isdigit():
-            print("\n❌ ERRO: O ID da consulta deve ser um número.\n")
-            return
+        while True:
+            consulta_id = input("ID da consulta que deseja atualizar: ").strip()
+            
+            if not consulta_id.isdigit():
+                print("❌ ERRO: O ID deve ser um número.")
+                continue
 
-        cursor.execute("SELECT medico_id FROM consultas WHERE consulta_id = %s", (consulta_id,))
-        resultado = cursor.fetchone()
-        if not resultado:
-            print("\n❌ ERRO: Consulta não encontrada.\n")
-            return
+            sql = "SELECT medico_id, data_hora, status, observacoes FROM consultas WHERE consulta_id = %s"
+            cursor.execute(sql, (consulta_id,))
+            resultado = cursor.fetchone()
 
-        medico_id = resultado[0]  # pega médico associado à consulta
+            if not resultado:
+                print(f"❌ ERRO: Consulta {consulta_id} não encontrada.")
+                continue
+            
+            medico_id_atual = resultado[0]
+            data_atual = resultado[1]
+            status_atual = resultado[2]
+            obs_atual = resultado[3]
+            
+            data_formatada = data_atual.strftime('%d/%m/%Y %H:%M')
+            
+            print(f"\n🔎 DADOS ATUAIS DA CONSULTA {consulta_id}:")
+            print(f"   Data: {data_formatada}")
+            print(f"   Status: {status_atual}")
+            print(f"   Observação: {obs_atual}")
+            break
 
-        # pede e valida novo status
-        novo_status = input("Novo status (Agendada, Concluída, Cancelada): ").strip()
-        # normaliza para maiúsculas sem acento para comparação simples
-        novo_status_normalizado = novo_status.upper().replace("Á", "A").replace("Ç", "C").replace("Í", "I").replace("Ú", "U").replace("Ó", "O").replace("É", "E")
-        if novo_status_normalizado not in [s.replace("Á", "A").replace("Ã","A") for s in STATUS_VALIDOS]:
-            print("\n❌ ERRO: Status inválido. Use: Agendada, Concluída ou Cancelada.\n")
-            return
+        while True:
+            print("\nO que você deseja alterar?")
+            print("1. Status (Agendada/Concluída/Cancelada/Falta)")
+            print("2. Data e Horário")
+            print("3. Observações")
+            print("4. Voltar (Cancelar operação)")
+            
+            opcao = input("Escolha uma opção (1-4): ").strip()
 
-        # pede e valida nova data/hora
-        nova_data_hora = input("Nova data e hora (AAAA-MM-DD HH:MM:SS): ").strip()
-        try:
-            datetime.strptime(nova_data_hora, "%Y-%m-%d %H:%M:%S")
-        except ValueError:
-            print("\n❌ ERRO: Data e hora no formato inválido. Use: AAAA-MM-DD HH:MM:SS\n")
-            return
+            if opcao == "1":
+                while True:
+                    print(f"Status Atual: {status_atual}")
+                    novo_status = input("Novo Status (AGENDADA, CONCLUIDA, CANCELADA, FALTA): ").strip().upper()
+                    
+                    lista_status = ['AGENDADA', 'CONCLUIDA', 'CANCELADA', 'FALTA']
+                    
+                    if novo_status not in lista_status:
+                        print(f"❌ Status inválido. Escolha entre: {lista_status}")
+                        continue 
 
-        # verifica conflito (passando o id da consulta para ignorá-la)
-        if verificar_conflito_horario(medico_id, nova_data_hora, consulta_id_existente=consulta_id):
-            print("\n❌ ERRO: Já existe uma consulta marcada para este médico nesse horário.\n")
-            return
+                    if novo_status != 'CANCELADA':
+                        if verificar_conflito_horario(medico_id_atual, data_atual, consulta_id_existente=consulta_id):
+                            print("\n❌ ERRO: Conflito de horário!")
+                            print("Não é possível reativar esta consulta pois o horário já foi ocupado.")
+                            break 
 
-        # atualiza
-        comando = 'UPDATE consultas SET status = %s, data_hora = %s WHERE consulta_id = %s'
-        valores = (novo_status, nova_data_hora, consulta_id)
-        cursor.execute(comando, valores)
-        conexao.commit()
-        print("\n--- Consulta atualizada com sucesso!! ---")
+                    cursor.execute("UPDATE consultas SET status = %s WHERE consulta_id = %s", (novo_status, consulta_id))
+                    conexao.commit()
+                    print("✅ Status atualizado com sucesso!")
+                    return
+
+            elif opcao == "2":
+                while True:
+                    print("\nInforme a NOVA data e horário:")
+                    dia = input("Dia (Ex: 05): ").strip()
+                    mes = input("Mês (Ex: 12): ").strip()
+                    ano = input("Ano (Ex: 2025): ").strip()
+                    hora = input("Hora (HH:MM): ").strip()
+
+                    try:
+                        nova_data_hora = f"{ano}-{mes.zfill(2)}-{dia.zfill(2)} {hora}:00"
+                        if datetime.strptime(nova_data_hora, '%Y-%m-%d %H:%M:%S') < datetime.now():
+                             print("❌ Data no passado não permitida.")
+                             continue
+                    except ValueError:
+                        print("❌ Data inválida.")
+                        continue
+
+                    if verificar_conflito_horario(medico_id_atual, nova_data_hora, consulta_id_existente=consulta_id):
+                        print("❌ Médico indisponível neste novo horário.")
+                        continue 
+
+                    cursor.execute("UPDATE consultas SET data_hora = %s WHERE consulta_id = %s", (nova_data_hora, consulta_id))
+                    conexao.commit()
+                    print("✅ Data reagendada com sucesso!")
+                    return
+
+            elif opcao == "3":
+                print(f"Obs Atual: {obs_atual}")
+                nova_obs = input("Digite a nova observação: ")
+                
+                cursor.execute("UPDATE consultas SET observacoes = %s WHERE consulta_id = %s", (nova_obs, consulta_id))
+                conexao.commit()
+                print("✅ Observação atualizada!")
+                return
+
+            elif opcao == "4":
+                print("Operação cancelada.")
+                return
+
+            else:
+                print("❌ Opção inválida.")
 
     except Exception as e:
         conexao.rollback()
-        print(f"❌ Erro ao atualizar consulta: {e}")
+        print(f"❌ Erro ao atualizar: {e}")
+
     finally:
         try:
             cursor.close()
-        except:
-            pass
-        try:
             conexao.close()
         except:
             pass
-
-
-
-# DELETE
 
 def deletar_consulta():
     print("\n--- Excluir Consulta ---")
