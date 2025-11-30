@@ -21,9 +21,8 @@ def menu():
         elif opcao == '3':
             atualizar_medico()
         elif opcao == '4':
-            id_medico = input("ID do médico para deletar: ")
-            deletar_medico(id_medico)
-            print("\nMédico deletado com sucesso!")
+             deletar_medico()
+             print("\nMédico deletado com sucesso!")
         elif opcao == '5':
             print("\nSaindo do sistema.")
             break
