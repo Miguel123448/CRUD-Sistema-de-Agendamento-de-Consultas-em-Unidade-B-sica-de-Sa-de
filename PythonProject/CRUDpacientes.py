@@ -114,15 +114,24 @@ def cadastrar_paciente():
 
 def ler_paciente():
     print('\n----- Lista de cadastros -----')
-    conexao = db.obter_conexao()
-    cursor = conexao.cursor()
+    conexao = None
+    cursor = None
+    resultado = []
 
-    comando = "SELECT idprontuario, nome, cpf, nascimento, telefone, endereco, cep FROM pacientes"
-    cursor.execute(comando)
-    resultado = cursor.fetchall()
+    try:
+        conexao = db.obter_conexao()
+        cursor = conexao.cursor()
 
-    cursor.close()
-    conexao.close()
+        comando = "SELECT idprontuario, nome, cpf, nascimento, telefone, endereco, cep FROM pacientes"
+        cursor.execute(comando)
+        resultado = cursor.fetchall()
+
+    except Exception as e:
+        print(f"Erro ao ler pacientes: {e}")
+        return
+    finally:
+        if cursor: cursor.close()
+        if conexao: conexao.close()
 
     if not resultado:
         print("Nenhum paciente cadastrado.")
@@ -145,12 +154,22 @@ def ler_paciente():
         print(f"{idprontuario:<5} | {nome:<20} | {cpf:<14} | {data_visual:<12} | {telefone:<14} | {endereco:<20} | {cep:<10}")
 
 def cpf_existe(cpf):
-    conexao = db.obter_conexao()
-    cursor = conexao.cursor()
-    cursor.execute("SELECT 1 FROM pacientes WHERE cpf = %s", (cpf,))
-    existe = cursor.fetchone() is not None
-    cursor.close()
-    conexao.close()
+    conexao = None
+    cursor = None
+    existe = False
+
+    try:
+        conexao = db.obter_conexao()
+        cursor = conexao.cursor()
+        cursor.execute("SELECT 1 FROM pacientes WHERE cpf = %s", (cpf,))
+        existe = cursor.fetchone() is not None
+    except Exception as e:
+        print(f"Erro ao verificar CPF: {e}")
+        existe = False
+    finally:
+        if cursor: cursor.close()
+        if conexao: conexao.close()
+
     return existe
 
 def atualizar_paciente():
@@ -164,6 +183,9 @@ def atualizar_paciente():
 
     print('\nQual campo deseja atualizar?')
     print(' 1 - Nome\n 2 - Data de Nascimento\n 3 - Telefone\n 4 - Endereço\n 5 - CEP')
+
+    conexao = None
+    cursor = None
 
     try:
         campo_opcao = int(input('Digite o número do campo: '))
@@ -190,7 +212,7 @@ def atualizar_paciente():
                     if len(ano) == 4:
                         novo_valor = f"{ano}-{mes}-{dia}"
                 except:
-                     pass
+                    pass
 
         conexao = db.obter_conexao()
         cursor = conexao.cursor()
@@ -202,15 +224,15 @@ def atualizar_paciente():
         if cursor.rowcount > 0:
             print('Cadastro atualizado com sucesso!')
         else:
-            print('Erro ao atualizar.')
+            print('Erro ao atualizar. Verifique se o valor é diferente do atual.')
 
     except ValueError:
         print("Erro: Opção inválida. Por favor, digite um número.")
     except Exception as e:
-        print(f"Ocorreu um erro: {e}")
+        print(f"Ocorreu um erro ao atualizar o paciente: {e}")
     finally:
-        if 'cursor' in locals(): cursor.close()
-        if 'conexao' in locals(): conexao.close()
+        if cursor: cursor.close()
+        if conexao: conexao.close()
 
 def deletar_paciente():
     print('----- Removendo cadastro -----')
