@@ -233,6 +233,7 @@ def atualizar_medico():
 
 
 def deletar_medico():
+    ler_medicos()
     id_medico = input("ID do médico para deletar: ")
 
     conexao = None
@@ -253,3 +254,4 @@ def deletar_medico():
 
 if __name__ == "__main__":
     menu()
+
