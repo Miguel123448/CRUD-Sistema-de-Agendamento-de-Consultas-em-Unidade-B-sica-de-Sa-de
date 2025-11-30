@@ -34,7 +34,7 @@ CREATE TABLE `consultas` (
   KEY `pacientes_id_idx` (`paciente_id`),
   CONSTRAINT `medicos_id` FOREIGN KEY (`medico_id`) REFERENCES `medicos` (`medico_id`),
   CONSTRAINT `pacientes_id` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`idprontuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,6 +43,7 @@ CREATE TABLE `consultas` (
 
 LOCK TABLES `consultas` WRITE;
 /*!40000 ALTER TABLE `consultas` DISABLE KEYS */;
+INSERT INTO `consultas` VALUES (2,2,1,'2025-11-29 12:00:00','AGENDADO','');
 /*!40000 ALTER TABLE `consultas` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-11-08 20:14:22
+-- Dump completed on 2025-11-30 16:17:26
