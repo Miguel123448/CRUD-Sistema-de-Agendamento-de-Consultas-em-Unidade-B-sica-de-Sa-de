@@ -126,9 +126,6 @@ def criar_consulta():
     finally:
         try:
             cursor.close()
-        except:
-            pass
-        try:
             conexao.close()
         except:
             pass
@@ -172,6 +169,7 @@ def listar_consulta():
 
     except Exception as e:
         print(f"❌ Erro ao listar: {e}")
+    
     finally:
         try:
             cursor.close()
@@ -328,6 +326,10 @@ def deletar_consulta():
     except Exception as e:
         conexao.rollback()
         print(f"❌ Erro ao excluir consulta: {e}")
+    
     finally:
-        cursor.close()
-        conexao.close()
+        try:
+            cursor.close()
+            conexao.close()
+        except:
+            pass
