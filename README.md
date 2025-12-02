@@ -104,7 +104,7 @@ Antes de executar o sistema, instale:
             host="localhost",
             user="seu_usuario",
             password="sua_senha",
-            database="agendamentos"
+            database="banco"
         )
     ```
 
