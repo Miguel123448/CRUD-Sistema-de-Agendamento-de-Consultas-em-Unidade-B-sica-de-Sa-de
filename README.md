@@ -121,7 +121,7 @@ Antes de executar o sistema, instale:
 2.  Execute o arquivo principal:
 
     ``` bash
-    python main.py
+    python menu.py
     ```
 
 3.  Utilize o menu para acessar:
