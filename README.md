@@ -49,3 +49,15 @@ Ele resolve o problema da organização manual de pacientes, médicos e consulta
 - Interface textual amigável
 - Navegação fácil entre módulos
 - Validação de entradas e tratamento de erros (IDs inexistentes, horários inválidos, falhas de conexão, etc.)
+
+## Instruções de Execução
+
+### 1. Pré-requisitos
+
+#### Antes de executar o sistema, instale:
+- Python 3.10+
+- MySQL Server (ou SQLite, caso você tenha adaptado)
+- Biblioteca de conexão MySQL:
+``` pip install mysql-connector-python ```
+
+
