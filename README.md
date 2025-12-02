@@ -52,12 +52,69 @@ Ele resolve o problema da organização manual de pacientes, médicos e consulta
 
 ## Instruções de Execução
 
-### 1. Pré-requisitos
+### **1. Pré-requisitos**
 
-#### Antes de executar o sistema, instale:
-- Python 3.10+
-- MySQL Server (ou SQLite, caso você tenha adaptado)
-- Biblioteca de conexão MySQL:
-``` pip install mysql-connector-python ```
+Antes de executar o sistema, instale: - **Python 3.10+** - **MySQL
+Server** (ou SQLite, caso você tenha adaptado) - Biblioteca de conexão
+MySQL: `bash   pip install mysql-connector-python`
 
+------------------------------------------------------------------------
 
+### **2. Configurando o Banco de Dados**
+
+1.  No MySQL, crie o banco de dados:
+
+    ``` sql
+    CREATE DATABASE agendamentos;
+    ```
+
+2.  Crie as tabelas necessárias (pacientes, médicos, consultas).\
+    Caso o projeto contenha arquivo `.sql`, importe-o diretamente.
+
+3.  Configure o arquivo `db.py`:
+
+    ``` python
+    def obter_conexao():
+        return mysql.connector.connect(
+            host="localhost",
+            user="seu_usuario",
+            password="sua_senha",
+            database="agendamentos"
+        )
+    ```
+
+------------------------------------------------------------------------
+
+### **3. Executando o Sistema**
+
+1.  Abra o terminal e navegue até a pasta do projeto:
+
+    ``` bash
+    cd nome_da_pasta_do_projeto
+    ```
+
+2.  Execute o arquivo principal:
+
+    ``` bash
+    python main.py
+    ```
+
+3.  Utilize o menu para acessar:
+
+    -   CRUD de Pacientes\
+    -   CRUD de Médicos\
+    -   CRUD de Consultas\
+    -   Relatórios\
+    -   Sair
+
+------------------------------------------------------------------------
+
+### **4. Observações**
+
+-   O sistema roda totalmente no terminal, sem interface gráfica.\
+-   Há tratamento de erros para situações comuns como:
+    -   Conexão falha ao banco\
+    -   IDs não encontrados\
+    -   Formatos de horário inválidos\
+-   Pode ser executado via Docker usando um container com MySQL e outro
+    com o app Python.
