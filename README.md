@@ -7,19 +7,20 @@
 - Lucas Felipe Barreto Cavalcante
 - Pablo Arthur Eustáquio de Lima
 - Thiago Cardozo da Conceição
+
 # **Sistema de Agendamento de Consultas -- CRUD em Terminal**
 
 ## 📌 Objetivo do Sistema
 
 O sistema foi desenvolvido para **gerenciar agendamentos de consultas em
 uma Unidade Básica de Saúde (UBS)** utilizando um CRUD executado no
-terminal.\
+terminal.
 Ele resolve o problema da **organização manual de pacientes, médicos e
 consultas**, oferecendo uma solução centralizada, simples e eficiente.
 
-**Usuários-alvo:**\
-- Atendentes de unidades de saúde\
-- Funcionários administrativos\
+**Usuários-alvo:**
+- Atendentes de unidades de saúde
+- Funcionários administrativos
 - Estudantes e desenvolvedores que desejam aprender CRUD com banco de
 dados
 
@@ -29,48 +30,47 @@ dados
 
 ### **1. Módulo de Pacientes**
 
--   Cadastrar novos pacientes\
--   Listar pacientes cadastrados\
--   Atualizar dados de pacientes\
+-   Cadastrar novos pacientes
+-   Listar pacientes cadastrados
+-   Atualizar dados de pacientes
 -   Remover pacientes do sistema
 
 ------------------------------------------------------------------------
 
 ### **2. Módulo de Médicos**
 
--   Cadastrar médicos\
--   Listar médicos com IDs e nomes\
--   Editar informações cadastrais\
+-   Cadastrar médicos
+-   Listar médicos com IDs e nomes
+-   Editar informações cadastrais
 -   Excluir médicos registrados
 
 ------------------------------------------------------------------------
 
 ### **3. Módulo de Consultas**
 
--   Criar novas consultas associadas a pacientes e médicos\
--   Listar todas as consultas existentes\
--   Atualizar informações de uma consulta\
+-   Criar novas consultas associadas a pacientes e médicos
+-   Listar todas as consultas existentes
+-   Atualizar informações de uma consulta
 -   Cancelar ou excluir consultas
 
 ------------------------------------------------------------------------
 
 ### **4. Módulo de Relatórios**
 
--   Relatório de pacientes cadastrados\
--   Relatório de médicos\
--   Relatório de consultas agendadas\
--   Consultas por paciente\
--   Consultas por médico\
+-   Relatório de pacientes cadastrados
+-   Relatório de médicos
+-   Relatório de consultas agendadas
+-   Consultas por paciente
+-   Consultas por médico
 -   Dados apresentados em formato organizado para análise e conferência
 
 ------------------------------------------------------------------------
 
 ### **5. Sistema de Menu**
 
--   Interface textual amigável\
--   Navegação fácil entre módulos\
--   Validação de entradas e tratamento de erros (IDs inexistentes,
-    horários inválidos, falhas de conexão, etc.)
+-   Interface textual amigável
+-   Navegação fácil entre módulos
+-   Validação de entradas e tratamento de erros (IDs inexistentes, rários inválidos, falhas de conexão, etc.)
 
 ------------------------------------------------------------------------
 
@@ -78,9 +78,11 @@ dados
 
 ### **1. Pré-requisitos**
 
-Antes de executar o sistema, instale: - **Python 3.10+** - **MySQL
-Server** (ou SQLite, caso você tenha adaptado) - Biblioteca de conexão
-MySQL: `bash   pip install mysql-connector-python`
+Antes de executar o sistema, instale: 
+- **Python 3.10+**
+- **MySQLServer** (ou SQLite, caso você tenha adaptado)
+- Biblioteca de conexão MySQL:
+- `bash   pip install mysql-connector-python`
 
 ------------------------------------------------------------------------
 
@@ -124,20 +126,18 @@ MySQL: `bash   pip install mysql-connector-python`
 
 3.  Utilize o menu para acessar:
 
-    -   CRUD de Pacientes\
-    -   CRUD de Médicos\
-    -   CRUD de Consultas\
-    -   Relatórios\
+    -   CRUD de Pacientes
+    -   CRUD de Médicos
+    -   CRUD de Consultas
+    -   Relatórios
     -   Sair
 
 ------------------------------------------------------------------------
 
 ### **4. Observações**
 
--   O sistema roda totalmente no terminal, sem interface gráfica.\
+-   O sistema roda totalmente no terminal, sem interface gráfica.
 -   Há tratamento de erros para situações comuns como:
-    -   Conexão falha ao banco\
-    -   IDs não encontrados\
-    -   Formatos de horário inválidos\
--   Pode ser executado via Docker usando um container com MySQL e outro
-    com o app Python.
+    -   Conexão falha ao banco
+    -   IDs não encontrados
+    -   Formatos de horário inválidos
