@@ -89,11 +89,10 @@ MySQL: `bash   pip install mysql-connector-python`
 1.  No MySQL, crie o banco de dados:
 
     ``` sql
-    CREATE DATABASE agendamentos;
+    CREATE DATABASE banco;
     ```
 
-2.  Crie as tabelas necessárias (pacientes, médicos, consultas).\
-    Caso o projeto contenha arquivo `.sql`, importe-o diretamente.
+2.  Importe as tabelas necessárias (pacientes, médicos, consultas).
 
 3.  Configure o arquivo `db.py`:
 
